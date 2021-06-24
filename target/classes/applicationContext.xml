@@ -60,7 +60,9 @@
     <!-- 原生Mybaits与Spring整合
     <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
     -->
-    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <!-- 原生Mybaits与Spring整合 -->
+<!--    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">-->
+    <bean id="sessionFactory" class="com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="mapperLocations" value="classpath:mappers/*.xml"/>
         <!-- 5.MyBatis配置文件地址 -->
