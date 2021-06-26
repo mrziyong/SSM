@@ -63,10 +63,14 @@
 
     <script>
         $.fn.raty.defaults.path = "./resources/raty/lib/images"
-        $(function (){
+        function loadMore(isReset) {
+            if(isReset == true) {
+                $("#nextPage").val(1);
+            }
+            var nextPage = $("#nextPage").val();
             $.ajax({
                 url: "/books",
-                data: {p:1},
+                data: {p:nextPage},
                 type: "get",
                 dataType: "json",
                 success: function (json) {
@@ -82,7 +86,46 @@
                     }
                     // 显示星型评价组件
                     $(".stars").raty({readOnly:true});
+
+                    if(json.current < json.pages) {
+                        $("#nextPage").val(parseInt(json.current) + 1);
+                        $("#btnMore").show();
+                        $("#divNoMore").hide();
+                    } else {
+                        $("#btnMore").hide();
+                        $("#divNoMore").show();
+                    }
                 }
+            })
+        }
+        $(function (){
+            // $.ajax({
+            //     url: "/books",
+            //     data: {p:1},
+            //     type: "get",
+            //     dataType: "json",
+            //     success: function (json) {
+            //         console.log(json);
+            //         let list = json.records;
+            //         for (let i = 0; i< list.length;i++) {
+            //             let book = json.records[i]
+            //             // let html = "<li>" + book.bookName + "</li>";
+            //             // 将数据结合tpl模板，生成html
+            //             let html = template("tpl", book);
+            //             console.log(html);
+            //             $("#bookList").append(html);
+            //         }
+            //         // 显示星型评价组件
+            //         $(".stars").raty({readOnly:true});
+            //     }
+            // })
+            loadMore(true);
+        })
+
+        // 绑定加载更多按钮单击事件
+        $(function (){
+            $("#btnMore").click(function () {
+                loadMore();
             })
         })
     </script>
