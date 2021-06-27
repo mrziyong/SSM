@@ -22,7 +22,7 @@ public class BookServiceImplTest {
     private BookService bookService;
     @Test
     public void paging() {
-        IPage<Book> pageObject = bookService.paging(1,10);
+        IPage<Book> pageObject = bookService.paging(2l, "quantity",1,10);
         List<Book> records = pageObject.getRecords();
         for (Book b:records) {
             System.out.println(b.getBookId() + ":" + b.getBookName());

@@ -67,12 +67,15 @@
         // isReset 参数设置true,代表从第一页开始查询，否则按nextPage查询后续页
         function loadMore(isReset) {
             if(isReset == true) {
+                $("#bookList").html("");
                 $("#nextPage").val(1);
             }
             var nextPage = $("#nextPage").val();
+            var categoryId = $("#categoryId").val();
+            var order = $("#order").val();
             $.ajax({
                 url: "/books",
-                data: {p:nextPage},
+                data: {p:nextPage,categoryId:categoryId,order:order},
                 type: "get",
                 dataType: "json",
                 success: function (json) {
@@ -128,6 +131,24 @@
         $(function (){
             $("#btnMore").click(function () {
                 loadMore();
+            })
+
+            $(".category").click(function () {
+                $(".category").removeClass("highlight");
+                $(".category").addClass("text-black-50");
+                $(this).addClass("highlight");
+                var categoryId = $(this).data("category");
+                $("#categoryId").val(categoryId);
+                loadMore(true);
+            })
+
+            $(".order").click(function () {
+                $(".order").removeClass("highlight");
+                $(".order").addClass("text-black-50");
+                $(this).addClass("highlight");
+                var order = $(this).data("order");
+                $("#order").val(order);
+                loadMore(true);
             })
         })
     </script>
