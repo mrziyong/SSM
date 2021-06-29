@@ -2,7 +2,9 @@ package com.imooc.reader.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.imooc.reader.entity.Member;
+import com.imooc.reader.entity.MemberReadState;
 import com.imooc.reader.mapper.MemberMapper;
+import com.imooc.reader.mapper.MemberReadStateMapper;
 import com.imooc.reader.service.MemberService;
 import com.imooc.reader.service.eption.BussinessException;
 import com.imooc.reader.utils.MD5Utils;
@@ -19,6 +21,8 @@ import java.util.Random;
 public class MemberServiceImpl implements MemberService {
     @Resource
     private MemberMapper memberMapper;
+    @Resource
+    private MemberReadStateMapper memberReadStateMapper;
     /**
      * 会员注册，创建新会员
      *
@@ -66,5 +70,20 @@ public class MemberServiceImpl implements MemberService {
             throw new BussinessException("M03", "输入密码有误");
         }
         return member;
+    }
+
+    /**
+     * 获取阅读状态
+     *
+     * @param memberId 会员编号
+     * @param bookId   图书编号
+     * @return 阅读状态对象
+     */
+    public MemberReadState selectMemberReadState(Long memberId, Long bookId) {
+        QueryWrapper<MemberReadState> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("book_id", bookId);
+        queryWrapper.eq("member_id", memberId);
+        MemberReadState memberReadState = memberReadStateMapper.selectOne(queryWrapper);
+        return memberReadState;
     }
 }
