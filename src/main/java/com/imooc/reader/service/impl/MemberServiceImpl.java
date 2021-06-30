@@ -9,6 +9,7 @@ import com.imooc.reader.service.MemberService;
 import com.imooc.reader.service.eption.BussinessException;
 import com.imooc.reader.utils.MD5Utils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -79,11 +80,40 @@ public class MemberServiceImpl implements MemberService {
      * @param bookId   图书编号
      * @return 阅读状态对象
      */
+    @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
     public MemberReadState selectMemberReadState(Long memberId, Long bookId) {
         QueryWrapper<MemberReadState> queryWrapper = new QueryWrapper();
         queryWrapper.eq("book_id", bookId);
         queryWrapper.eq("member_id", memberId);
         MemberReadState memberReadState = memberReadStateMapper.selectOne(queryWrapper);
+        return memberReadState;
+    }
+
+    /**
+     * 更新阅读状态
+     *
+     * @param memberId  会员编号
+     * @param bookId    图书编号
+     * @param readState 阅读状态
+     * @return 阅读状态对象
+     */
+    public MemberReadState updateMemberReadState(Long memberId, Long bookId, Integer readState) {
+        QueryWrapper<MemberReadState> queryWrapper = new QueryWrapper<MemberReadState>();
+        queryWrapper.eq("book_id", bookId);
+        queryWrapper.eq("member_id", memberId);
+        MemberReadState memberReadState = memberReadStateMapper.selectOne(queryWrapper);
+        // 无则新增，有则更新
+        if (memberReadState == null) {
+            memberReadState = new MemberReadState();
+            memberReadState.setMemberId(memberId);
+            memberReadState.setBookId(bookId);
+            memberReadState.setReadState(readState);
+            memberReadState.setCreateTime(new Date());
+            memberReadStateMapper.insert(memberReadState);
+        } else {
+            memberReadState.setReadState(readState);
+            memberReadStateMapper.updateById(memberReadState);
+        }
         return memberReadState;
     }
 }
