@@ -52,7 +52,14 @@
 
         $(function () {
             <#if memberReadState ?? >
+                // 重选阅读状态
                 $("*[data-read-state='${memberReadState.readState}']").addClass("highlight");
+            </#if>
+            <#if !loginMember ??>
+                $("*[data-read-state],#btnEvaluation,*[data-evaluation-id]").click(function (){
+                    // 未登录情况下提示“需要登录”
+                    $("#exampleModalCenter").modal("show");
+                })
             </#if>
         })
     </script>
