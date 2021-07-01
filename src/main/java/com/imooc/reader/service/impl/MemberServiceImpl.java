@@ -1,8 +1,10 @@
 package com.imooc.reader.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.imooc.reader.entity.Evaluation;
 import com.imooc.reader.entity.Member;
 import com.imooc.reader.entity.MemberReadState;
+import com.imooc.reader.mapper.EvaluationMapper;
 import com.imooc.reader.mapper.MemberMapper;
 import com.imooc.reader.mapper.MemberReadStateMapper;
 import com.imooc.reader.service.MemberService;
@@ -24,6 +26,8 @@ public class MemberServiceImpl implements MemberService {
     private MemberMapper memberMapper;
     @Resource
     private MemberReadStateMapper memberReadStateMapper;
+    @Resource
+    private EvaluationMapper evaluationMapper;
     /**
      * 会员注册，创建新会员
      *
@@ -115,5 +119,26 @@ public class MemberServiceImpl implements MemberService {
             memberReadStateMapper.updateById(memberReadState);
         }
         return memberReadState;
+    }
+
+    /**
+     * 发布新的短评
+     *
+     * @param memberId 会员编号
+     * @param bookId   图书编号
+     * @param score    评分
+     * @param content  短评内容
+     * @return 短评对象
+     */
+    public Evaluation evaluate(Long memberId, Long bookId, Integer score, String content) {
+        Evaluation evaluation = new Evaluation();
+        evaluation.setMemberId(memberId);
+        evaluation.setBookId(bookId);
+        evaluation.setScore(score);
+        evaluation.setContent(content);
+        evaluation.setCreateTime(new Date());
+        evaluation.setEnjoy(0);
+        evaluationMapper.insert(evaluation);
+        return evaluation;
     }
 }

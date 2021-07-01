@@ -1,5 +1,6 @@
 package com.imooc.reader.controller;
 
+import com.imooc.reader.entity.Evaluation;
 import com.imooc.reader.entity.Member;
 import com.imooc.reader.service.MemberService;
 import com.imooc.reader.service.eption.BussinessException;
@@ -94,6 +95,22 @@ public class MemberController {
             memberService.updateMemberReadState(memberId,bookId,readState);
             result.put("code", "0");
             result.put("msg", "sucess");
+        } catch (BussinessException ex) {
+            ex.printStackTrace();
+            result.put("code", ex.getCode());
+            result.put("code", ex.getMsg());
+        }
+        return result;
+    }
+    @PostMapping("/evaluate")
+    @ResponseBody
+    public Map evaluate(Long memberId, Long bookId, Integer score,String content) {
+        Map result = new HashMap();
+        try {
+            Evaluation eva = memberService.evaluate(memberId, bookId, score, content);
+            result.put("code", "0");
+            result.put("msg", "sucess");
+            result.put("evaluation", eva);
         } catch (BussinessException ex) {
             ex.printStackTrace();
             result.put("code", ex.getCode());
