@@ -118,4 +118,26 @@ public class MemberController {
         }
         return result;
     }
+
+    /**
+     * 评论点赞
+     * @param evaluationId
+     * @return
+     */
+    @PostMapping("/enjoy")
+    @ResponseBody
+    public Map enjoy(Long evaluationId) {
+        Map result = new HashMap();
+        try {
+            Evaluation eva = memberService.enjoy(evaluationId);
+            result.put("code", "0");
+            result.put("msg", "sucess");
+            result.put("evaluation", eva);
+        } catch (BussinessException ex) {
+            ex.printStackTrace();
+            result.put("code", ex.getCode());
+            result.put("code", ex.getMsg());
+        }
+        return result;
+    }
 }

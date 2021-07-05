@@ -141,4 +141,17 @@ public class MemberServiceImpl implements MemberService {
         evaluationMapper.insert(evaluation);
         return evaluation;
     }
+
+    /**
+     * 短评点赞
+     *
+     * @param evaluationId 短评编写
+     * @return 短评对象
+     */
+    public Evaluation enjoy(Long evaluationId) {
+        Evaluation evaluation = evaluationMapper.selectById(evaluationId);
+        evaluation.setEnjoy(evaluation.getEnjoy()+1);
+        evaluationMapper.updateById(evaluation);
+        return evaluation;
+    }
 }

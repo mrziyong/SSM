@@ -48,4 +48,11 @@ public interface MemberService {
      * @return 短评对象
      */
     public Evaluation evaluate(Long memberId, Long bookId, Integer score, String content);
+
+    /**
+     * 短评点赞
+     * @param evaluationId 短评编写
+     * @return 短评对象
+     */
+    public Evaluation enjoy(Long evaluationId);
 }
