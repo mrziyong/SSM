@@ -1,5 +1,6 @@
 package com.imooc.reader.controller.management;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.imooc.reader.entity.Book;
 import com.imooc.reader.service.BookService;
 import com.imooc.reader.service.eption.BussinessException;
@@ -71,6 +72,66 @@ public class MBookController {
             String cover = img.attr("src");
             book.setCover(cover); // 来自于description描述的第一幅图
             bookService.createBook(book);
+            result.put("code", "0");
+            result.put("msg", "success");
+        } catch (BussinessException ex) {
+            ex.printStackTrace();
+            result.put("code", ex.getCode());
+            result.put("msg", ex.getMsg());
+        }
+        return result;
+    }
+
+    @GetMapping("/list")
+    @ResponseBody
+    public Map list(Integer page, Integer limit) {
+        if (page == null) {
+            page = 1;
+        }
+        if (limit == null) {
+            limit = 10;
+        }
+
+        IPage<Book> pageObject = bookService.paging(null, null, page, limit);
+        Map result = new HashMap();
+        result.put("code", "0");
+        result.put("msg", "success");
+        result.put("data", pageObject.getRecords()); // 当前页面数据
+        result.put("count", pageObject.getTotal()); // 未分页时记录总数
+        return result;
+    }
+
+    @GetMapping("/id/{id}")
+    @ResponseBody
+    public Map selectById(@PathVariable("id") Long bookId) {
+        Book book = bookService.selectById(bookId);
+        Map result = new HashMap();
+        result.put("code", "0");
+        result.put("msg", "success");
+        result.put("data", book);
+        return result;
+    }
+
+    /**
+     * 更新图书数据
+     * @param book
+     * @return
+     */
+    @PostMapping("/update")
+    @ResponseBody
+    public Map updateBook(Book book) {
+        Map result = new HashMap();
+        try {
+            Book rawBook = bookService.selectById(book.getBookId());
+            rawBook.setBookName(book.getBookName());
+            rawBook.setSubTitle(book.getSubTitle());
+            rawBook.setAuthor(book.getAuthor());
+            rawBook.setCategoryId(book.getCategoryId());
+            rawBook.setDescription(book.getDescription());
+            Document doc = Jsoup.parse(book.getDescription());
+            String cover = doc.select("img").first().attr("src");
+            rawBook.setCover(cover);
+            bookService.updateBook(rawBook);
             result.put("code", "0");
             result.put("msg", "success");
         } catch (BussinessException ex) {
