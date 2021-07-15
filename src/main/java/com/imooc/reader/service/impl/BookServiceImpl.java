@@ -4,7 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.imooc.reader.entity.Book;
+import com.imooc.reader.entity.Evaluation;
+import com.imooc.reader.entity.Member;
+import com.imooc.reader.entity.MemberReadState;
 import com.imooc.reader.mapper.BookMapper;
+import com.imooc.reader.mapper.EvaluationMapper;
+import com.imooc.reader.mapper.MemberReadStateMapper;
 import com.imooc.reader.service.BookService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,7 +22,10 @@ import javax.annotation.Resource;
 public class BookServiceImpl implements BookService {
     @Resource
     private BookMapper bookMapper;
-
+    @Resource
+    private MemberReadStateMapper memberReadStateMapper;
+    @Resource
+    private EvaluationMapper evaluationMapper;
     /**
      * 分类查询图书
      * @param categoryId 分类编号
@@ -78,5 +86,21 @@ public class BookServiceImpl implements BookService {
     public Book updateBook(Book book) {
         bookMapper.updateById(book);
         return book;
+    }
+
+    /**
+     * 删除图书及相关数据
+     *
+     * @param bookId 图书编号
+     */
+    @Transactional
+    public void deletBook(Long bookId) {
+        bookMapper.deleteById(bookId);
+        QueryWrapper<MemberReadState> mrsQuerWrapper = new QueryWrapper<MemberReadState>();
+        mrsQuerWrapper.eq("book_id", bookId);
+        memberReadStateMapper.delete(mrsQuerWrapper);
+        QueryWrapper<Evaluation> evaluationQueryWrapper = new QueryWrapper<Evaluation>();
+        evaluationQueryWrapper.eq("book_id", bookId);
+        evaluationMapper.delete(evaluationQueryWrapper);
     }
 }
