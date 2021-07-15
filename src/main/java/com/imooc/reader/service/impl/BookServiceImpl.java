@@ -61,4 +61,10 @@ public class BookServiceImpl implements BookService {
     public void updateEvaluation() {
         bookMapper.updateEvaluation();
     }
+
+    @Transactional
+    public Book createBook(Book book) {
+        bookMapper.insert(book);
+        return book;
+    }
 }
