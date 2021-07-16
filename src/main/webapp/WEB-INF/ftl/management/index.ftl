@@ -40,8 +40,8 @@
                     <li class="layui-nav-item layui-nav-itemed">
                         <a href="javascript:void(0)">数据管理</a>
                         <dl class="layui-nav-child module" data-node-id="xxx">
-                            <dd><a href="图书管理页.html" target="ifmMain">图书管理</a></dd>
-                            <dd><a href="短评管理.html" target="ifmMain">短评管理
+                            <dd><a href="/management/book/index.html" target="ifmMain">图书管理</a></dd>
+                            <dd><a href="/management/evaluation/index.html" target="ifmMain">短评管理
                                 </a></dd>
                         </dl>
                     </li>
@@ -53,7 +53,7 @@
     </div>
     <!--主体部分采用iframe嵌入其他页面-->
     <div class="layui-body" style="overflow-y: hidden">
-        <iframe name="ifmMain" style="border: 0px;width: 100%;height: 100%" src="图书管理页.html"></iframe>
+        <iframe name="ifmMain" style="border: 0px;width: 100%;height: 100%" src="/management/book/index.html"></iframe>
     </div>
     <!--版权信息-->
     <div class="layui-footer">
